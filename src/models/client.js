@@ -3,7 +3,8 @@ const mongoose = require("mongoose")
 const client = mongoose.model("client", new mongoose.Schema({
     email : {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     firstName : {
         type: String,
