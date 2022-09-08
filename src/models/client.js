@@ -4,7 +4,8 @@ const client = mongoose.model("client", new mongoose.Schema({
     email : {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     firstName : {
         type: String,
