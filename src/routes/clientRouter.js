@@ -3,24 +3,10 @@ const clientController = require("../controller/clientController")
 
 const router = express.Router()
 
-router.get("/", (req, res) => {
-    clientController.getAll(req, res)
-}) 
-
-router.get("/:id", (req, res) => {
-    clientController.get(req, res)
-})
-
-router.post("/", (req, res) => {
-    clientController.create(req, res)
-})
-
-router.put("/:id", (req, res) => {
-    clientController.update(req, res)
-})
-
-router.delete("/:id", (req, res) => {
-    clientController.delete(req, res)
-})
+router.get("/", clientController.getAll) 
+router.get("/:id", clientController.get)
+router.post("/",  clientController.create)
+router.put("/:id", clientController.update)
+router.delete("/:id", clientController.delete)
 
 module.exports = router
