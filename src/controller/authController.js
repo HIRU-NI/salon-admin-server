@@ -1,5 +1,20 @@
 const User = require("../models/user")
 
+//handle errors
+const handleErrors = (err) => {
+    let errors = {email: "", password: ""}
+
+    //validation error
+    if(err.message.includes("user validation failed")) {
+        Object.values(err.errors).forEach(({properties}) => {
+            errors[properties.path] = properties.message
+        })
+    }
+
+    return errors
+
+}
+
 module.exports.signup = async (req, res) => {
     const { email, password } = req.body
 
@@ -10,8 +25,8 @@ module.exports.signup = async (req, res) => {
         })
         res.status(201).json(resp)
     } catch (error) {
-        console.log(error)
-        res.status(500).send("Error : user not created")
+        const errors = handleErrors(error)
+        res.status(400).json(errors)
     }
 }
 
