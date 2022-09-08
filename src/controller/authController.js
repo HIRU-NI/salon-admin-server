@@ -4,6 +4,12 @@ const User = require("../models/user")
 const handleErrors = (err) => {
     let errors = {email: "", password: ""}
 
+    //duplicate error code 
+    if (err.code === 11000) {
+        errors.email = "An user with the given email already exists"
+        return errors
+    }
+
     //validation error
     if(err.message.includes("user validation failed")) {
         Object.values(err.errors).forEach(({properties}) => {
