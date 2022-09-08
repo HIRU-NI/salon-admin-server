@@ -46,8 +46,8 @@ module.exports.update = async (req, res) => {
     if (resp) {
         resp.client = client
         resp.stylist = stylist
-        resp. service = service
-        resp. date = date
+        resp.service = service
+        resp.date = date
     }
 
     await resp.save()

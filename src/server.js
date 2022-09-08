@@ -3,11 +3,13 @@ const bodyParser = require("body-parser")
 require("dotenv").config()
 const dbConnection = require("./db/connections")
 
-const router = require("./route")
+const clientRouter = require("./routes/clientRouter")
+const reservationRouter = require("./routes/reservationRouter")
+
 const server = express()
 
 server.use(bodyParser.json())
-server.use("/api", router)
+server.use("/client", clientRouter)
 
 
 const port = process.env.PORT || "8080"

@@ -1,20 +1,16 @@
 const mongoose = require("mongoose")
 
-const Client = require("./client")
-const Stylist = require("./stylist")
-const Service = require("./service")
-
 const reservation = mongoose.model("reservation", new mongoose.Schema({
     client : {
-        type: Client,
+        type: String,
         required: true
     },
     stylist : {
-        type: Stylist,
+        type: String,
         required: true
     },
     service : {
-        type: Service,
+        type: String,
         required: true
     },
     date: {
