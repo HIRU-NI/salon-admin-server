@@ -33,8 +33,10 @@ const handleErrors = (err) => {
 
 }
 
+//max age of the auth token
 const maxAge = 1 * 1 * 60 * 60
 
+//create auth token
 const createToken = (id) => {
     return jwt.sign({ id }, "salon prauge secret", {
         expiresIn: maxAge
@@ -72,4 +74,8 @@ module.exports.login = async (req, res) => {
         console.log(error)
         res.status(400).json( errors );
     }
+}
+
+module.exports.logout = (req, res) => {
+    res.cookie('jwt', '', { maxAge: 1 });
 }
