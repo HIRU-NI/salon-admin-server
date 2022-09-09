@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 
+const bcrypt = require("bcrypt")
+
 //validators
 const { isEmail } = require("validator")
 
@@ -16,6 +18,12 @@ const user = mongoose.model("user", {
         required: [true, "Password is required"],
         minlength: [6, "Password should contain alteast 6 characters"]
     }
+})
+
+user.pre("save", async (next) => {
+    const salt = await bcrypt.genSalt()
+    this.password = await bcrypt.hash(this.password, salt )
+    next()
 })
 
 module.exports= user
