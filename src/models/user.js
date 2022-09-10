@@ -13,11 +13,19 @@ const userSchema = new mongoose.Schema({
         lowercase: true, 
         validate: [isEmail, 'Please enter a valid email']
     },
+    firstName: {
+        type: String,
+        required: [true, "First name is required"],
+    },
+    lastName: {
+        type: String,
+        required: [true, "Last name is required"],
+    },
     password: {
         type: String,
         required: [true, "Password is required"],
         minlength: [6, "Password should contain alteast 6 characters"]
-    }
+    },
 })
 
 //hash the password before user is saved in db
