@@ -79,5 +79,11 @@ module.exports.login = async (req, res) => {
 }
 
 module.exports.logout = (req, res) => {
-    res.cookie('jwt', '', { maxAge: 1 });
+    try {
+        res.cookie('jwt', '', { maxAge: 1 });
+        res.status(200).send()
+        
+    } catch (error) {
+        res.status(400).json( error );
+    }
 }
