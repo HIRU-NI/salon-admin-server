@@ -1,5 +1,6 @@
 const User = require("../models/user")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const user = require("../models/user");
 
 //handle errors
 const handleErrors = (err) => {
@@ -56,8 +57,11 @@ module.exports.signup = async (req, res) => {
         const token = createToken(resp._id)
         res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge*1000})
         res.status(201).json({
-            user: resp,
+            user: {
+                id: resp._id,
+            email: resp.email,
             token: token
+            }
         })
     } catch (error) {
         console.log(error)
@@ -71,17 +75,17 @@ module.exports.login = async (req, res) => {
 
     try {
         const resp = await User.login(email, password)
-        if(resp) {
+        
             const token = createToken(resp._id);
             res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure:false, sameSite: 'None' });
             res.status(200).json({
-            user: resp,
-            token:token
+                user: {
+                    id: resp._id,
+                email: resp.email,
+                token: token
+                }
         });
-        }
-        res.status(500).json({
-            error: "Server error"
-        })
+       
     } catch (error) {
         res.status(400).json({
             error: "Invalid credentials"
