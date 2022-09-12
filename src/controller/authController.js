@@ -34,11 +34,11 @@ const handleErrors = (err) => {
 }
 
 //max age of the auth token
-const maxAge = 1 * 1 * 60 * 60
+const maxAge = 1 * 24 * 60 * 60
 
 //create auth token
 const createToken = (id) => {
-    return jwt.sign({ id }, "salon prauge secret", {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: maxAge
     })
 }
@@ -55,7 +55,10 @@ module.exports.signup = async (req, res) => {
         })
         const token = createToken(resp._id)
         res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge*1000})
-        res.status(201).json(resp)
+        res.status(201).json({
+            user: resp,
+            token: token
+        })
     } catch (error) {
         console.log(error)
         const errors = handleErrors(error)
@@ -68,13 +71,21 @@ module.exports.login = async (req, res) => {
 
     try {
         const resp = await User.login(email, password)
-        const token = createToken(resp._id);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(200).json(resp);
+        if(resp) {
+            const token = createToken(resp._id);
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure:false, sameSite: 'None' });
+            res.status(200).json({
+            user: resp,
+            token:token
+        });
+        }
+        res.status(500).json({
+            error: "Server error"
+        })
     } catch (error) {
-        const errors = handleErrors(error);
-        console.log(error)
-        res.status(400).json( errors );
+        res.status(400).json({
+            error: "Invalid credentials"
+        })
     }
 }
 

@@ -1,5 +1,26 @@
 const clientModel = require("../models/client")
 
+//handle errors
+const handleErrors = (err) => {
+    let errors = {email: "", password: ""}
+
+    //duplicate email error
+    if (err.code === 11000) {
+        errors.email = "An client with the given email already exists"
+        return errors
+    }
+
+    //validation error
+    if(err.message.includes("client validation failed")) {
+        Object.values(err.errors).forEach(({properties}) => {
+            errors[properties.path] = properties.message
+        })
+    }
+
+    return errors
+
+}
+
 module.exports.get = async (req, res) => {
     const {id} = req.params
 
@@ -13,12 +34,14 @@ module.exports.get = async (req, res) => {
 
 }
 module.exports.getAll = async (req, res) => {
-    const resp = await clientModel.find()
-
-    res.send({
-        success: true,
-        data: resp
-    })
+    try {
+        const resp = await clientModel.find()
+        res.status(200).json(resp)
+    } catch (error) {
+        console.log(error)
+        const errors = handleErrors(error)
+        res.status(400).json(errors)
+    }
 }
 module.exports.create = async (req, res) => {
     const {email, firstName, lastName, phone} = req.body

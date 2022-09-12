@@ -2,16 +2,19 @@ const mongoose = require("mongoose")
 
 const reservation = mongoose.model("reservation", new mongoose.Schema({
     client : {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Client'
     },
     stylist : {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Stylist'
     },
     service : {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Service'
     },
     date: {
         type: Date,
