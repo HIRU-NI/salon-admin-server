@@ -11,7 +11,7 @@ server.use(bodyParser.json())
 server.use(
     cors({
       origin: 'http://localhost:3000',
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: "*",
       
     })
@@ -22,10 +22,14 @@ server.options("*", cors())
 const authRouter = require("./routes/authRouter")
 const clientRouter = require("./routes/clientRouter")
 const reservationRouter = require("./routes/reservationRouter")
+const stylistRouter = require("./routes/stylistRouter")
+const serviceRouter = require("./routes/serviceRouter")
 
 server.use(authRouter)
 server.use("/client", clientRouter)
 server.use("/reservation", reservationRouter)
+server.use("/stylist", stylistRouter)
+server.use("/service", serviceRouter)
   
 
 //MongoDB database connection

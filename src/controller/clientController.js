@@ -86,7 +86,7 @@ module.exports.delete = async (req, res) => {
 
     const {id} = req.params
 
-    const resp = await clientModel.deleteOne({id})
+    const resp = await clientModel.findByIdAndDelete(id)
 
     res.send({
         success: true,
