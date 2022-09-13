@@ -44,7 +44,8 @@ module.exports.getAll = async (req, res) => {
     }
 }
 module.exports.create = async (req, res) => {
-    const {email, firstName, lastName, phone} = req.body
+    try {
+        const {email, firstName, lastName, phone} = req.body
 
     const resp = await clientModel.create({
         email,
@@ -53,10 +54,12 @@ module.exports.create = async (req, res) => {
         phone
     })
 
-    res.send({
-        success: true,
-        data: resp
-    })
+    res.send(resp)
+    } catch (error) {
+        res.status(500).json({
+            error: 'Server error'
+        })
+    }
 
 } 
 module.exports.update = async (req, res) => {
