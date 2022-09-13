@@ -63,24 +63,29 @@ module.exports.create = async (req, res) => {
 
 } 
 module.exports.update = async (req, res) => {
-    const {id} = req.params
-    const {email, firstName, lastName, phone} = req.body
+    try {
+        const {id} = req.params
+        const {email, firstName, lastName, phone} = req.body
 
-    const resp = await clientModel.findById(id)
+        const resp = await clientModel.findById(id)
 
-    if (resp) {
-        resp.email = email
-        resp.firstName = firstName
-        resp. lastName = lastName
-        resp. phone = phone
+        if (resp) {
+            resp.email = email
+            resp.firstName = firstName
+            resp. lastName = lastName
+            resp. phone = phone
+        }
+        console.log(resp4)
+
+        await resp.save()
+
+        res.status(200).json(resp)
+
+    } catch (error) {
+        res.status(400).json({
+            error: "Server error: could not update client data"
+        })
     }
-
-    await resp.save()
-
-    res.send({
-        success: true,
-        data: resp
-    })
 }
 module.exports.delete = async (req, res) => {
 

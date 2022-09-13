@@ -66,7 +66,7 @@ module.exports.update = async (req, res) => {
 module.exports.delete = async (req, res) => {
     try {
         const {id} = req.params
-
+        console.log(id)
         const resp = await reservationModel.findByIdAndDelete(id)
 
         res.status(200).json(resp)

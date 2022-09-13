@@ -24,12 +24,14 @@ const clientRouter = require("./routes/clientRouter")
 const reservationRouter = require("./routes/reservationRouter")
 const stylistRouter = require("./routes/stylistRouter")
 const serviceRouter = require("./routes/serviceRouter")
+const userRouter = require("./routes/userRouter")
 
 server.use(authRouter)
 server.use("/client", clientRouter)
 server.use("/reservation", reservationRouter)
 server.use("/stylist", stylistRouter)
 server.use("/service", serviceRouter)
+server.use("/user", userRouter)
   
 
 //MongoDB database connection
