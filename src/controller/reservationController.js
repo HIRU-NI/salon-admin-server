@@ -13,14 +13,18 @@ module.exports.get = async (req, res) => {
 
 }
 module.exports.getAll = async (req, res) => {
-    const resp = await reservationModel.find()
+    try {
+        const resp = await reservationModel.find()
 
-    res.send({
-        success: true,
-        data: resp
-    })
+        res.status(200).json(resp)
+    } catch (error) {
+        res.status(400).json({
+            error: "Could not fetch reservations"
+        })
+    }
 }
 module.exports.create = async (req, res) => {
+   try {
     const {client, stylist, service, date} = req.body
 
     const resp = await reservationModel.create({
@@ -30,10 +34,12 @@ module.exports.create = async (req, res) => {
         date
     })
 
-    res.send({
-        success: true,
-        data: resp
+    res.status(200).json(resp)
+   } catch (error) {
+    res.status(400).json({
+        error: "Server error: could not create the reservation"
     })
+   }
 
 } 
 module.exports.update = async (req, res) => {
@@ -58,13 +64,15 @@ module.exports.update = async (req, res) => {
     })
 }
 module.exports.delete = async (req, res) => {
+    try {
+        const {id} = req.params
 
-    const {id} = req.params
+        const resp = await reservationModel.findByIdAndDelete(id)
 
-    const resp = await reservationModel.deleteOne({id})
-
-    res.send({
-        success: true,
-        data: resp
-    })
+        res.status(200).json(resp)
+    } catch (error) {
+        res.status(400).json({
+            error: "Server error: Could not delete the reservation"
+        })
+    }
 }
