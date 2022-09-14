@@ -47,17 +47,21 @@ module.exports.create = async (req, res) => {
     try {
         const {email, firstName, lastName, phone} = req.body
 
-    const resp = await clientModel.create({
-        email,
-        firstName,
-        lastName,
-        phone
-    })
+        const resp = await clientModel.create({
+            email,
+            firstName,
+            lastName,
+            phone
+        })
 
-    res.send(resp)
+        res.status(200).json(resp)
+
     } catch (error) {
+        let errorMsg = "Server error: could not add client"
+
+        if(error.code === 11000) errorMsg = "Server error: Client with given email alredy exists"
         res.status(500).json({
-            error: 'Server error'
+            error: errorMsg
         })
     }
 
@@ -65,36 +69,52 @@ module.exports.create = async (req, res) => {
 module.exports.update = async (req, res) => {
     try {
         const {id} = req.params
+        
         const {email, firstName, lastName, phone} = req.body
 
-        const resp = await clientModel.findById(id)
+        let resp
 
-        if (resp) {
-            resp.email = email
-            resp.firstName = firstName
-            resp. lastName = lastName
-            resp. phone = phone
+        try {
+            resp = await clientModel.findById(id)
+            if (resp) {
+                resp.email = email
+                resp.firstName = firstName
+                resp. lastName = lastName
+                resp. phone = phone
+            }
+        } catch (error) {
+            res.status(400).json({
+                error: "Client does not exist"
+            })
+            return
         }
-        console.log(resp4)
-
         await resp.save()
 
         res.status(200).json(resp)
 
     } catch (error) {
-        res.status(400).json({
-            error: "Server error: could not update client data"
+        let errorMsg = "Server error: could not update client"
+
+        if(error.code === 11000) errorMsg = "Server error: Client with given email alredy exists"
+        res.status(500).json({
+            error: errorMsg
         })
     }
+    
 }
 module.exports.delete = async (req, res) => {
 
-    const {id} = req.params
+    try {
+        const {id} = req.params
 
-    const resp = await clientModel.findByIdAndDelete(id)
+        const resp = await clientModel.findByIdAndDelete(id)
 
-    res.send({
-        success: true,
-        data: resp
-    })
+        res.status(200).json(resp)
+    } catch (error) {
+        res.status(400).json({
+            error: "Server error: could not delete client data"
+        })
+    }
+
+    
 }
