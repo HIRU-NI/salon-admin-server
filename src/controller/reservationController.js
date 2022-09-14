@@ -19,7 +19,7 @@ module.exports.getAll = async (req, res) => {
         res.status(200).json(resp)
     } catch (error) {
         res.status(400).json({
-            error: "Could not fetch reservations"
+            error: "Server error: Could not fetch reservations"
         })
     }
 }
@@ -42,27 +42,32 @@ module.exports.create = async (req, res) => {
    }
 
 } 
+
 module.exports.update = async (req, res) => {
-    const {id} = req.params
-    const {client, stylist, service, date} = req.body
+    try { 
+        const {id} = req.params
+        const {client, stylist, service, date} = req.body
 
 
-    const resp = await reservationModel.findById(id)
+        const resp = await reservationModel.findById(id)
 
-    if (resp) {
-        resp.client = client
-        resp.stylist = stylist
-        resp.service = service
-        resp.date = date
+        if (resp) {
+            resp.client = client
+            resp.stylist = stylist
+            resp.service = service
+            resp.date = date
+        }
+
+        await resp.save()
+
+        res.status(200).json(resp) 
+    } catch (error) {
+        res.status(400).json({
+            error: "Server error: could not update reservation"
+        })
     }
-
-    await resp.save()
-
-    res.send({
-        success: true,
-        data: resp
-    })
 }
+
 module.exports.delete = async (req, res) => {
     try {
         const {id} = req.params
