@@ -46,8 +46,7 @@ module.exports.create = async (req, res) => {
 module.exports.update = async (req, res) => {
     try { 
         const {id} = req.params
-        const {client, stylist, service, date} = req.body
-
+        const {client, stylist, service, date, isComplete} = req.body
 
         const resp = await reservationModel.findById(id)
 
@@ -56,12 +55,14 @@ module.exports.update = async (req, res) => {
             resp.stylist = stylist
             resp.service = service
             resp.date = date
+            resp.isComplete = isComplete
         }
 
         await resp.save()
 
         res.status(200).json(resp) 
     } catch (error) {
+        
         res.status(400).json({
             error: "Server error: could not update reservation"
         })
@@ -71,7 +72,6 @@ module.exports.update = async (req, res) => {
 module.exports.delete = async (req, res) => {
     try {
         const {id} = req.params
-        console.log(id)
         const resp = await reservationModel.findByIdAndDelete(id)
 
         res.status(200).json(resp)

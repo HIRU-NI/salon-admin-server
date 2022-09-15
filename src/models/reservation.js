@@ -19,6 +19,10 @@ const reservation = mongoose.model("reservation", new mongoose.Schema({
     date: {
         type: Date,
         required: true
+    },
+    isComplete: {
+        type: Boolean,
+        default: false
     }
     
 }))
