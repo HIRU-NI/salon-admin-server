@@ -1,5 +1,6 @@
 const reservationModel = require("../models/reservation")
 
+// get reservation by id
 module.exports.get = async (req, res) => {
     const {id} = req.params
 
@@ -12,6 +13,8 @@ module.exports.get = async (req, res) => {
 
 
 }
+
+//list all reservations
 module.exports.getAll = async (req, res) => {
     try {
         const resp = await reservationModel.find()
@@ -23,6 +26,8 @@ module.exports.getAll = async (req, res) => {
         })
     }
 }
+
+//create a new reservation
 module.exports.create = async (req, res) => {
    try {
     const {client, stylist, service, date} = req.body
@@ -43,6 +48,7 @@ module.exports.create = async (req, res) => {
 
 } 
 
+//update a reservation
 module.exports.update = async (req, res) => {
     try { 
         const {id} = req.params
@@ -69,6 +75,7 @@ module.exports.update = async (req, res) => {
     }
 }
 
+//delete a reservation by id
 module.exports.delete = async (req, res) => {
     try {
         const {id} = req.params
@@ -78,6 +85,24 @@ module.exports.delete = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             error: "Server error: Could not delete the reservation"
+        })
+    }
+}
+
+//send reservation status percentage
+module.exports.getCount = async (req, res) => {
+    try {
+        const resp1 = await reservationModel.find({isComplete: true})
+        const resp2 = await reservationModel.find({isComplete: false})
+
+        res.status(200).json({
+            completed: resp1.length,
+            scheduled: resp2.length
+        })
+        
+    } catch (error) {
+        res.status(400).json({
+            error: "Server error: unable to fetch data"
         })
     }
 }
