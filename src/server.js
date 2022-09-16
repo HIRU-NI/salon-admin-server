@@ -10,7 +10,7 @@ server.use(bodyParser.json())
 
 server.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: '*',
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: "*",
       
