@@ -2,7 +2,7 @@ const User = require("../models/user");
 const Token = require("../models/token");
 
 const jwt = require("jsonwebtoken");
-const emails = require('../services/emails')
+const emails = require("../services/emails");
 
 //handle errors
 const handleErrors = (err) => {
@@ -74,7 +74,7 @@ module.exports.addUser = async (req, res) => {
       createdAt: Date.now(),
     }).save();
 
-    const link = `http://localhost:3000/signup?token=${registrationToken}&id=${resp._id}`;
+    const link = `http://localhost:3000/signup?token=${registrationToken}&email=${resp.email}&first=${resp.firstName}&last=${resp.lastName}`;
     emails.sendRegistrationLink(resp.email, resp.firstName, link);
 
     res.status(201).json(resp);
