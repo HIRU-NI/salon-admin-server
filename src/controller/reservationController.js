@@ -1,4 +1,11 @@
 const reservationModel = require("../models/reservation")
+const clientModel = require('../models/client')
+const stylistModel = require('../models/stylist')
+const serviceModel = require('../models/service')
+
+const moment = require('moment')
+
+const emailJob = require('../jobs/sendEmail')
 
 // get reservation by id
 module.exports.get = async (req, res) => {
@@ -39,6 +46,12 @@ module.exports.create = async (req, res) => {
         date
     })
 
+    const clientData = await clientModel.findById(client)
+    const stylistData = await stylistModel.findById(stylist)
+    const serviceData = await serviceModel.findById(service)
+
+    emailJob.sendEmail(clientData.email, clientData.firstName, moment(date).format('DD/MM/YYYY'), moment(date).format('h:mm A'), stylistData.name, serviceData.name)
+    
     res.status(200).json(resp)
    } catch (error) {
     res.status(400).json({
