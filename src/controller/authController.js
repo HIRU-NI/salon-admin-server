@@ -44,6 +44,66 @@ const createToken = (id) => {
   });
 };
 
+//signup
+module.exports.signup = async (req, res) => {
+  const { password, email, firstName, lastName, token } = req.body;
+  
+
+  try {   
+
+    //verify token 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    
+    const user  = await User.findById(decoded.id)
+
+    if (!user) {
+      res.status(400).json({
+        error:
+          "Registration token expired. Please contact the admins",
+      });
+      return
+    }
+
+    
+
+    const userToken = await Token.findOne({userId:user._id})
+
+    if (!userToken) {
+        res.status(400).json({
+          error:
+            "Registration token expired. Please contact the admins",
+        });
+        return
+    }
+
+
+    user.password = password
+    user.email = email
+    user.firstName = firstName
+    user.lastName = lastName
+
+    await user.save()
+    await userToken.deleteOne()
+
+    const jwtToken = createToken(user._id)
+
+    res.status(201).json({
+        user: {
+            id: user._id,
+            email: user.email,
+            token: jwtToken
+        }
+    })
+
+  } catch (error) {
+    
+    res.status(400).json({
+        error: "Server error: Could not complete the registration"
+    })
+  }
+};
+
+//inivite a user as an admin
 module.exports.addUser = async (req, res) => {
   const { email, firstName, lastName } = req.body;
 
