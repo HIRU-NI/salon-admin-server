@@ -139,7 +139,6 @@ module.exports.addUser = async (req, res) => {
 
     res.status(201).json(resp);
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       error: "Server error: Could not create the user",
     });
