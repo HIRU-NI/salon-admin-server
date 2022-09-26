@@ -9,5 +9,6 @@ const router = express.Router()
 
 router.get("/", protect, userController.getAll) 
 router.put("/:id", protect, userController.updateUser) 
+router.post("/:id", protect, userController.reset) 
 
 module.exports = router

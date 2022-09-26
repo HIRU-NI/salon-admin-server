@@ -11,17 +11,14 @@ module.exports.getAll = async (req, res) => {
   }
 };
 
+//update user details
 module.exports.updateUser = async (req, res) => {
-  const id = req.params;
-
-  
+  const { id } = req.params;
 
   const { email, firstName, lastName } = req.body;
+
   try {
-    const resp = userModel.findById(id);
-
-    const user = new userModel(resp)
-
+    const user = await userModel.findById(id);
 
     if (!user) {
       res.status(400).json({
@@ -30,17 +27,47 @@ module.exports.updateUser = async (req, res) => {
       return;
     }
 
-    user.email = email
-    user.firstName = firstName
-    user.lastName = lastName
+    user.email = email;
+    user.firstName = firstName;
+    user.lastName = lastName;
 
-    await user.save()
+    await user.save();
 
-    res.status(200).json(user)
+    res.status(200).json(user);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({
-        error: "Server error: could not update user data"
-    })
+      error: "Server error: could not update user data",
+    });
   }
 };
+
+//reset user password
+module.exports.reset = async (req, res) => {
+  const { id } = req.params;
+
+  const { password } = req.body;
+
+  try {
+    const user = await userModel.findById(id);
+
+    if (!user) {
+      res.status(400).json({
+        error: "User not found",
+      });
+      return;
+    }
+
+    user.password = password;
+
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      error: "Server error: could not reset user password",
+    });
+  }
+};
+
