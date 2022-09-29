@@ -47,59 +47,50 @@ const createToken = (id) => {
 //signup
 module.exports.signup = async (req, res) => {
   const { password, email, firstName, lastName, token } = req.body;
-  
 
-  try {   
+  try {
+    //verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    //verify token 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    
-    const user  = await User.findById(decoded.id)
+    const user = await User.findById(decoded.id);
 
     if (!user) {
       res.status(400).json({
-        error:
-          "Registration token expired. Please contact the admins",
+        error: "Registration token expired. Please contact the admins",
       });
-      return
+      return;
     }
 
-    
-
-    const userToken = await Token.findOne({userId:user._id})
+    const userToken = await Token.findOne({ userId: user._id });
 
     if (!userToken) {
-        res.status(400).json({
-          error:
-            "Registration token expired. Please contact the admins",
-        });
-        return
+      res.status(400).json({
+        error: "Registration token expired. Please contact the admins",
+      });
+      return;
     }
 
+    user.password = password;
+    user.email = email;
+    user.firstName = firstName;
+    user.lastName = lastName;
 
-    user.password = password
-    user.email = email
-    user.firstName = firstName
-    user.lastName = lastName
+    await user.save();
+    await userToken.deleteOne();
 
-    await user.save()
-    await userToken.deleteOne()
-
-    const jwtToken = createToken(user._id)
+    const jwtToken = createToken(user._id);
 
     res.status(201).json({
-        user: {
-            id: user._id,
-            email: user.email,
-            token: jwtToken
-        }
-    })
-
+      user: {
+        id: user._id,
+        email: user.email,
+        token: jwtToken,
+      },
+    });
   } catch (error) {
-    
     res.status(400).json({
-        error: "Server error: Could not complete the registration"
-    })
+      error: "Server error: Could not complete the registration",
+    });
   }
 };
 
