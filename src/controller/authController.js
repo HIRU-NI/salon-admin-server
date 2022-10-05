@@ -154,6 +154,8 @@ module.exports.login = async (req, res) => {
         id: resp._id,
         email: resp.email,
         token: token,
+        firstName: resp.firstName,
+        lastName: resp.lastName
       },
     });
   } catch (error) {
