@@ -16,8 +16,11 @@ module.exports.getAll = async (req, res) => {
 //update user details
 module.exports.updateUser = async (req, res) => {
   const { id } = req.params;
+  
 
   const { email, firstName, lastName } = req.body;
+
+  
 
   try {
     const user = await userModel.findById(id);
@@ -35,7 +38,14 @@ module.exports.updateUser = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json(user);
+    res.status(200).json({
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(400).json({

@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema({
 
 //hash the password before user is saved in db
 userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
   if (this.password) {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
@@ -42,6 +45,7 @@ userSchema.statics.login = async function (email, password) {
 
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
+
     if (auth) return user;
     throw Error("incorrect password");
   }

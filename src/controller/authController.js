@@ -142,6 +142,8 @@ module.exports.login = async (req, res) => {
   try {
     const resp = await User.login(email, password);
 
+    
+
     const token = createToken(resp._id);
     res.cookie("jwt", token, {
       httpOnly: true,
