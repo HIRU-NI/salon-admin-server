@@ -147,7 +147,7 @@ module.exports.addUser = async (req, res) => {
     }).save();
 
     const link = `http://localhost:3000/signup?token=${registrationToken}&email=${resp.email}&first=${resp.firstName}&last=${resp.lastName}`;
-    emails.sendRegistrationLink(resp.email, resp.firstName, link);
+    emails.sendRegistrationLinkEmail(resp.email, resp.firstName, link);
 
     res.status(201).json(resp);
   } catch (error) {

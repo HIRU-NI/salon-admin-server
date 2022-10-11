@@ -12,7 +12,7 @@ const FROM_EMAIL = "hirunimanth@gmail.com"
 });
 
 //send email
-module.exports.sendEmail = (
+module.exports.sendReservationConfirmationEmail = (
   toEmail,
   clientName,
   reservationDate,
@@ -34,7 +34,7 @@ module.exports.sendEmail = (
   });
 };
 
-module.exports.sendRegistrationLink = (toEmail, name, link) => {
+module.exports.sendRegistrationLinkEmail = (toEmail, name, link) => {
   //email options
   const mailOptions = {
     from: FROM_EMAIL,

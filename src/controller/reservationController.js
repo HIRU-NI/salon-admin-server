@@ -49,7 +49,7 @@ module.exports.create = async (req, res) => {
     const serviceData = await serviceModel.findById(service);
 
     try {
-      emails.sendEmail(
+      emails.sendReservationConfirmationEmail(
         clientData.email,
         clientData.firstName,
         moment(date).format("DD/MM/YYYY"),
