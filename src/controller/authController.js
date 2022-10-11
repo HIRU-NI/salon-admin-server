@@ -44,6 +44,27 @@ const createToken = (id) => {
   });
 };
 
+//validate signup token
+module.exports.validateToken = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const resp = await Token.findOne({ token });
+    console.log(resp)
+    if (resp) {
+      res.status(200).json();
+      return;
+    }
+    res.status(403).json({
+      error: "token is expired or not valid"
+    })
+  } catch (error) {
+    res.status(500).json({
+      error: "Server error"
+    })
+  }
+};
+
 //signup
 module.exports.signup = async (req, res) => {
   const { password, email, firstName, lastName, token } = req.body;
@@ -142,8 +163,6 @@ module.exports.login = async (req, res) => {
   try {
     const resp = await User.login(email, password);
 
-    
-
     const token = createToken(resp._id);
     res.cookie("jwt", token, {
       httpOnly: true,
@@ -157,7 +176,7 @@ module.exports.login = async (req, res) => {
         email: resp.email,
         token: token,
         firstName: resp.firstName,
-        lastName: resp.lastName
+        lastName: resp.lastName,
       },
     });
   } catch (error) {
