@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
+const { ErrorHandler } = require("../helpers/error");
 
 //validators
 const { isEmail } = require("validator");
@@ -47,9 +48,9 @@ userSchema.statics.login = async function (email, password) {
     const auth = await bcrypt.compare(password, user.password);
 
     if (auth) return user;
-    throw Error("incorrect password");
+    throw new ErrorHandler(400, "Incorrect password");
   }
-  throw Error("incorrect email");
+  throw new ErrorHandler(400, "Incorrect email");
 };
 
 const user = mongoose.model("user", userSchema);

@@ -4,6 +4,8 @@ const Token = require("../models/token");
 const jwt = require("jsonwebtoken");
 const emails = require("../services/emails");
 
+const { ErrorHandler } = require("../helpers/error");
+
 //handle errors
 const handleErrors = (err) => {
   let errors = { email: "", password: "" };
@@ -50,18 +52,18 @@ module.exports.validateToken = async (req, res) => {
 
   try {
     const resp = await Token.findOne({ token });
-    console.log(resp)
+    console.log(resp);
     if (resp) {
       res.status(200).json();
       return;
     }
     res.status(403).json({
-      error: "token is expired or not valid"
-    })
+      error: "token is expired or not valid",
+    });
   } catch (error) {
     res.status(500).json({
-      error: "Server error"
-    })
+      error: "Server error",
+    });
   }
 };
 
@@ -157,32 +159,28 @@ module.exports.addUser = async (req, res) => {
   }
 };
 
-module.exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
+module.exports.login = async (req, res, next) => {
   try {
+    const { email, password } = req.body;
+
+    if (!email) throw new ErrorHandler(400, "Required field (email) missing");
+    if (!password)
+      throw new ErrorHandler(400, "Required field (password) missing");
+
     const resp = await User.login(email, password);
 
-    const token = createToken(resp._id);
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: maxAge * 1000,
-      secure: false,
-      sameSite: "None",
-    });
+    const token = createTokn(resp._id);
     res.status(200).json({
       user: {
         id: resp._id,
         email: resp.email,
-        token: token,
         firstName: resp.firstName,
         lastName: resp.lastName,
+        token: token,
       },
     });
   } catch (error) {
-    res.status(400).json({
-      error: "Invalid credentials",
-    });
+    next(error);
   }
 };
 
