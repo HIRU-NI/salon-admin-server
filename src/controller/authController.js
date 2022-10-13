@@ -48,9 +48,9 @@ const createToken = (id) => {
 
 //validate signup token
 module.exports.validateToken = async (req, res) => {
-  const { token } = req.body;
-
   try {
+    const { token } = req.body;
+
     const resp = await Token.findOne({ token });
     console.log(resp);
     if (resp) {
@@ -169,7 +169,7 @@ module.exports.login = async (req, res, next) => {
 
     const resp = await User.login(email, password);
 
-    const token = createTokn(resp._id);
+    const token = createToken(resp._id);
     res.status(200).json({
       user: {
         id: resp._id,
