@@ -21,6 +21,7 @@ module.exports.get = async (req, res) => {
 
 //list all reservations
 module.exports.getAll = async (req, res) => {
+  
   try {
     const resp = await reservationModel.find();
 
@@ -28,6 +29,30 @@ module.exports.getAll = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       error: "Server error: Could not fetch reservations",
+    });
+  }
+};
+
+//list reservations by page
+module.exports.getPage = async (req, res) => {
+  
+  try {
+
+    const { page } = req.params
+
+    const resp = await reservationModel.find().skip(parseInt(page,10) * 10).limit(10);
+
+    const total = (await reservationModel.find()).length
+
+    
+
+    res.status(200).json({
+      reservations: resp,
+      count: total
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: "Server error: Could not fetch",
     });
   }
 };

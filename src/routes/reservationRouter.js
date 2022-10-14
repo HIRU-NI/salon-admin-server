@@ -7,6 +7,7 @@ const { protect } = require('../middleware/authMiddleware')
 const router = express.Router()
 
 router.get("/", protect, reservationController.getAll) 
+router.get("/page/:page", protect, reservationController.getPage) 
 router.get("/:id", protect, reservationController.get)
 router.post("/", protect, reservationController.create)
 router.put("/:id", protect, reservationController.update)
