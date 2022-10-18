@@ -8,6 +8,7 @@ const { protect } = require('../middleware/authMiddleware')
 const router = express.Router()
 
 router.get("/", protect, clientController.getAll) 
+router.get("/page/:page/sort/:sortby", protect, clientController.getPage) 
 router.get("/:id", protect, clientController.get)
 router.post("/", protect,  clientController.create)
 router.put("/:id", protect, clientController.update)

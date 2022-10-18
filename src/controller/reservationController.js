@@ -42,13 +42,13 @@ module.exports.getPage = async (req, res) => {
 
     const resp = await reservationModel.find().skip(parseInt(page,10) * 10).limit(10);
 
-    const total = (await reservationModel.find()).length
+    const count = (await reservationModel.find()).length
 
     
 
     res.status(200).json({
       reservations: resp,
-      count: total
+      count: count
     });
   } catch (error) {
     res.status(400).json({
