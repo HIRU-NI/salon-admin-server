@@ -51,7 +51,7 @@ module.exports.getPage = async (req, res) => {
     let resp;
 
     if (sortby === "firstName")
-     { console.log("here")
+     { 
         resp = await clientModel
         .find()
         .sort({firstName : 1})
