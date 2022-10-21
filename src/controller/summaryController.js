@@ -2,6 +2,29 @@ const moment = require("moment/moment");
 const reservationModel = require("../models/reservation");
 const stylistModel = require("../models/stylist");
 
+const STATUS_TYPES = ["completed", "scheduled"]
+
+//get status percentage 
+module.exports.getStatusSummary = async (req, res, next) => {
+    try {
+        const reservations = await reservationModel.find()
+
+        const total = reservations.length
+
+        const completed = reservations.filter(reservation => reservation.isComplete)
+
+        const completedPercentage = completed.length
+        const scheduledPercentage = total-completed.length
+
+        res.status(200).json({
+            completed: completedPercentage,
+            scheduled: scheduledPercentage
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 //get number of reservations for each stylist during current week
 module.exports.getCurrentWeekAllocations = async (req, res, next) => {
   try {
